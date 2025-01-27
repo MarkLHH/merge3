@@ -67,7 +67,7 @@ class grid():
         return False
         
     
-    def resource_merge():
+    def resource_merge(self):
         gt_merge = [f'{self.x_ind},{self.y_ind}']
         # Find all connected field(s)
         return None
