@@ -7,5 +7,16 @@
 - Add console_util.py for console utitlies
 
 # Git cheat sheet
+- git pull origin main
+- git status
 - git add * || git add <file_name>
 - git commit -m "<message>"
+- git log --oneline --graph
+- git push origin main
+
+- git cat-file -p <hash>
+- git switch -c my_new_branch || git switch branch
+- git log --oneline --decorate --graph --parents
+- git rebase <new branch>
+- git reset --soft COMMITHASH
+- git merge remote/branch
