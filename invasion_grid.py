@@ -21,6 +21,7 @@ class grid():
             self.grid.append(k)
     
     def grid_display(self):
+        console_util.clear_screen()
         for x in range(self.size):
             x_line = '|'
             sep_line = ''
@@ -31,3 +32,21 @@ class grid():
             print(console_util.center_text(sep_line))
             print(console_util.center_text(x_line))
         print(console_util.center_text(sep_line))
+        print()
+        temp = input(console_util.center_text("Press enter to continue..."))
+    
+    def place_resource(self, x, y, resource):
+        # Raise index error
+        self.grid[x][y] = resource
+        self.grid_display()
+        
+    def check_merge_ava(self):
+        merge = False
+        if merge == True:
+            self.resource_merge()
+            self.grid_display()
+        else:
+            pass
+    
+    def resource_merge():
+        pass

@@ -1,13 +1,53 @@
 import console_util
 import invasion_grid
+import test
 
 def main():
-    console_util.clear_screen()
     console_util.print_spacer()
     try:
-        new_grid = invasion_grid.grid()
-        new_grid.grid_display()
+        test_grid = invasion_grid.grid(4)
+        test_grid.grid_display()
     except Exception as e:
         print(e)
+        return None
+    
+    ''' 
+    'a' indicates just placed
+    -----------------                                                                
+    | . | A | . | . |                                                                
+    -----------------                                                                
+    | A | a | A | A |                                                                
+    -----------------                                                                
+    | . | . | . | . |                                                                
+    -----------------                                                                
+    | . | . | . | . |                                                                
+    ----------------- 
+    '''
+    test_grid.place_resource(1,0,'A')
+    test_grid.check_merge_ava()
+    test_grid.place_resource(0,1,'A')
+    test_grid.check_merge_ava()
+    test_grid.place_resource(1,2,'A')
+    test_grid.check_merge_ava()
+    test_grid.place_resource(1,3,'A')
+    test_grid.check_merge_ava()
+    # Preparation complete
+    test_grid.place_resource(1,1,'a')
+    test_grid.check_merge_ava()
+    
+    test.test_merge(test_grid)
+    
+    '''
+    should become
+    -----------------                                                                
+    | . | . | . | . |                                                                
+    -----------------                                                                
+    | . | b | . | . |                                                                
+    -----------------                                                                
+    | . | . | . | . |                                                                
+    -----------------                                                                
+    | . | . | . | . |                                                                
+    -----------------
+    '''
     console_util.print_spacer()
 main()
