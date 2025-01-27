@@ -1,4 +1,8 @@
 # merge3
+in local: 
+1. `git init`
+2. `git remote add origin https://github.com/MarkLHH/merge3`
+3. `git pull origin main`
 
 # version 0.0.2
 
