@@ -36,7 +36,7 @@ class grid():
         temp = input(console_util.center_text("Press enter to continue..."))
     
     def place_resource(self, x, y, resource):
-        # Raise index error
+        # Raise index error?
         self.grid[x][y] = resource
         self.grid_display()
         
@@ -45,8 +45,11 @@ class grid():
         if merge == True:
             self.resource_merge()
             self.grid_display()
-        else:
-            pass
+        else: 
+        # update the grid for all resource unavailable to merge to uppercase
+            for x in range(self.size):
+                for y in range(self.size):
+                    self.grid[x][y] = self.grid[x][y].upper()
     
     def resource_merge():
         pass

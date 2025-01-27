@@ -23,13 +23,13 @@ def main():
     | . | . | . | . |                                                                
     ----------------- 
     '''
-    test_grid.place_resource(1,0,'A')
+    test_grid.place_resource(1,0,'a')
     test_grid.check_merge_ava()
-    test_grid.place_resource(0,1,'A')
+    test_grid.place_resource(0,1,'a')
     test_grid.check_merge_ava()
-    test_grid.place_resource(1,2,'A')
+    test_grid.place_resource(1,2,'a')
     test_grid.check_merge_ava()
-    test_grid.place_resource(1,3,'A')
+    test_grid.place_resource(1,3,'a')
     test_grid.check_merge_ava()
     # Preparation complete
     test_grid.place_resource(1,1,'a')
