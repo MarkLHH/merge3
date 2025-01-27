@@ -1,6 +1,11 @@
 import console_util
 
+level_a = 'abcde'
+level_1 = '12345'
+
 class grid():
+    
+    
     def __init__(self, size = 4):
         self.size = int(size)
 
@@ -23,6 +28,8 @@ class grid():
         # step placeholder
         self.x_ind = None
         self.y_ind = None
+        self.connected = []
+        self.visited = set()
     
     def grid_display(self):
         console_util.clear_screen()
@@ -46,7 +53,17 @@ class grid():
         self.grid[x][y] = resource
         self.grid_display()
         
-        
+    def dfs(self,r,c):
+        if (r,c) in self.visited or r < 0 or r >= self.size or c < 0 or c >= self.size or self.grid[r][c].lower() != self.grid[self.x_ind][self.y_ind]:
+            return None
+        self.visited.add((r,c))
+        self.connected.append((r,c))
+        # Explore all 4 possible directions: up, down, left, right
+        self.dfs(r - 1, c) # up
+        self.dfs(r + 1, c) # down
+        self.dfs(r, c - 1) # left
+        self.dfs(r, c + 1) # right
+    
     def update_grid(self):
         merge_flag = self.check_merge()
         if merge_flag == True:
@@ -59,15 +76,29 @@ class grid():
                     self.grid[x][y] = self.grid[x][y].upper()
     
     def check_merge(self):
-        connected_resources = 0
         # The point to check from self.grid[self.x_ind][self.y_ind]
-        #...
-        if connected_resources >= 3:
+        self.dfs(self.x_ind, self.y_ind)
+        if len(self.connected) >= 3:
+            print(self.connected)
             return True
-        return False
+        else:
+            print(self.connected)
+            self.connected = []
+            self.visited.clear()
+            return False
         
     
     def resource_merge(self):
-        gt_merge = [f'{self.x_ind},{self.y_ind}']
-        # Find all connected field(s)
+        # Find all connected field(s): self.connected
+        # Increase level for the initial point
+        level = level_a.index(self.grid[self.x_ind][self.y_ind])
+        self.grid[self.x_ind][self.y_ind] = level_a[level+1]
+        # and update to empty for the rest
+        self.connected.remove((self.x_ind,self.y_ind))
+        for field in self.connected:
+            self.grid[field[0]][field[1]] = '.'
+        
+        # Reset self.connected
+        self.connected = []
+        self.visited.clear()
         return None
