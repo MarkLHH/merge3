@@ -19,6 +19,10 @@ class grid():
             for j in range(size):
                 k.append('.')
             self.grid.append(k)
+        
+        # step placeholder
+        self.x_ind = None
+        self.y_ind = None
     
     def grid_display(self):
         console_util.clear_screen()
@@ -37,12 +41,15 @@ class grid():
     
     def place_resource(self, x, y, resource):
         # Raise index error?
+        self.x_ind = x
+        self.y_ind = y
         self.grid[x][y] = resource
         self.grid_display()
         
-    def check_merge_ava(self):
-        merge = False
-        if merge == True:
+        
+    def update_grid(self):
+        merge_flag = self.check_merge()
+        if merge_flag == True:
             self.resource_merge()
             self.grid_display()
         else: 
@@ -51,5 +58,16 @@ class grid():
                 for y in range(self.size):
                     self.grid[x][y] = self.grid[x][y].upper()
     
+    def check_merge(self):
+        connected_resources = 0
+        # The point to check from self.grid[self.x_ind][self.y_ind]
+        #...
+        if connected_resources >= 3:
+            return True
+        return False
+        
+    
     def resource_merge():
-        pass
+        gt_merge = [f'{self.x_ind},{self.y_ind}']
+        # Find all connected field(s)
+        return None

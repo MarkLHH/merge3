@@ -24,16 +24,16 @@ def main():
     ----------------- 
     '''
     test_grid.place_resource(1,0,'a')
-    test_grid.check_merge_ava()
+    test_grid.update_grid()
     test_grid.place_resource(0,1,'a')
-    test_grid.check_merge_ava()
+    test_grid.update_grid()
     test_grid.place_resource(1,2,'a')
-    test_grid.check_merge_ava()
+    test_grid.update_grid()
     test_grid.place_resource(1,3,'a')
-    test_grid.check_merge_ava()
+    test_grid.update_grid()
     # Preparation complete
     test_grid.place_resource(1,1,'a')
-    test_grid.check_merge_ava()
+    test_grid.update_grid()
     
     test.test_merge(test_grid)
     
