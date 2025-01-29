@@ -2,10 +2,8 @@ import console_util
 
 level_a = 'abcde'
 level_1 = '12345'
-
+# phase = 'Initiate', 'Placement', 'Update'
 class grid():
-    
-    
     def __init__(self, size = 4):
         self.size = int(size)
 
@@ -26,6 +24,8 @@ class grid():
             self.grid.append(k)
         
         # step placeholder
+        self.round = 0
+        self.phase = 'Initiate'
         self.x_ind = None
         self.y_ind = None
         self.connected = []
@@ -33,6 +33,8 @@ class grid():
     
     def grid_display(self):
         console_util.clear_screen()
+        print(console_util.center_text(f'Round: {self.round}'))
+        print()
         for x in range(self.size):
             x_line = '|'
             sep_line = ''
@@ -44,13 +46,18 @@ class grid():
             print(console_util.center_text(x_line))
         print(console_util.center_text(sep_line))
         print()
+        print(console_util.center_text(f'Phase: {self.phase}'))
+        print(console_util.center_text(f'Phase: Generate > Placement > Update'))
         temp = input(console_util.center_text("Press enter to continue..."))
     
     def place_resource(self, x, y, resource):
+        self.round += 1
         # Raise index error?
+        self.phase = 'Placement'
         self.x_ind = x
         self.y_ind = y
         self.grid[x][y] = resource
+        
         self.grid_display()
         
     def dfs(self,r,c):
@@ -65,6 +72,7 @@ class grid():
         self.dfs(r, c + 1) # right
     
     def update_grid(self):
+        self.phase = 'Update'
         merge_flag = self.check_merge()
         if merge_flag == True:
             self.resource_merge()
@@ -74,6 +82,8 @@ class grid():
             for x in range(self.size):
                 for y in range(self.size):
                     self.grid[x][y] = self.grid[x][y].upper()
+        
+        self.grid_display()
     
     def check_merge(self):
         # The point to check from self.grid[self.x_ind][self.y_ind]
@@ -85,8 +95,7 @@ class grid():
             print(self.connected)
             self.connected = []
             self.visited.clear()
-            return False
-        
+            return False  
     
     def resource_merge(self):
         # Find all connected field(s): self.connected
@@ -101,4 +110,13 @@ class grid():
         # Reset self.connected
         self.connected = []
         self.visited.clear()
-        return None
+        
+    def get_field_resources(self, x, y):
+        return self.grid[x][y]
+        
+    def game_ends(self):
+        # calculate score
+        # ...
+        
+        print('Game Ends!')
+        

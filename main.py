@@ -31,10 +31,13 @@ def main():
     test_grid.update_grid()
     test_grid.place_resource(1,3,'a')
     test_grid.update_grid()
+    test_grid.place_resource(3,3,'a')
+    test_grid.update_grid()
     # Preparation complete
     test_grid.place_resource(1,1,'a')
     test_grid.update_grid()
     
+    test_grid.update_grid()
     test.test_merge(test_grid)
     
     '''
