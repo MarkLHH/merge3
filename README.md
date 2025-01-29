@@ -24,3 +24,4 @@ in local:
 - git rebase <new branch>
 - git reset --soft COMMITHASH
 - git merge remote/branch
+- git branch -d <branch_name>
