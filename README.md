@@ -4,7 +4,7 @@ in local:
 2. `git remote add origin https://github.com/MarkLHH/merge3`
 3. `git pull origin main`
 
-# version 0.0.2
+# version 0.0.3
 
 # Change Log
 - Add grid and field display
