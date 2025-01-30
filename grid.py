@@ -1,7 +1,9 @@
 import console_util
+import random
 
 level_a = 'abcde'
 level_1 = '12345'
+not_check_list = '.@'
 # phase = 'Initiate', 'Placement', 'Update'
 class grid():
     def __init__(self, size = 4):
@@ -29,15 +31,23 @@ class grid():
         # step placeholder
         self.round = 0
         self.phase = 'Initiate'
-        self.x_ind = None
-        self.y_ind = None
+        self.x_ind = 0
+        self.y_ind = 0
         self.connected = []
         self.visited = set()
+        self.empty_field = []
+        
+        # fill up empty_field
+        for x in range(size):
+            for y in range(size):
+                self.empty_field.append((x,y))
+        self.grid_display()
     
     def grid_display(self):
         console_util.clear_screen()
         print(console_util.center_text(f'Round: {self.round}'))
-        print()
+        print(console_util.center_text(f'Phase: Generate > Placement > Update'))
+        #print()
         for x in range(self.size):
             x_line = '|'
             sep_line = ''
@@ -48,31 +58,9 @@ class grid():
             print(console_util.center_text(sep_line))
             print(console_util.center_text(x_line))
         print(console_util.center_text(sep_line))
-        print()
+        #print()
         print(console_util.center_text(f'Phase: {self.phase}'))
-        print(console_util.center_text(f'Phase: Generate > Placement > Update'))
-        temp = input(console_util.center_text("Press enter to continue..."))
-    
-    def resource_place(self, x, y, resource):
-        self.round += 1
-        # Raise index error?
-        self.phase = 'Placement'
-        self.x_ind = x
-        self.y_ind = y
-        self.grid[x][y] = resource
-        
-        self.grid_display()
-        
-    def dfs(self,r,c):
-        if (r,c) in self.visited or r < 0 or r >= self.size or c < 0 or c >= self.size or self.grid[r][c].lower() != self.grid[self.x_ind][self.y_ind]:
-            return None
-        self.visited.add((r,c))
-        self.connected.append((r,c))
-        # Explore all 4 possible directions: up, down, left, right
-        self.dfs(r - 1, c) # up
-        self.dfs(r + 1, c) # down
-        self.dfs(r, c - 1) # left
-        self.dfs(r, c + 1) # right
+        temp = input(console_util.center_text("Press enter to continue...")) if self.phase != "Placement" else None
     
     def grid_update(self):
         self.phase = 'Update'
@@ -80,17 +68,29 @@ class grid():
         if merge_flag == True:
             self.resource_merge()
             self.grid_display()
+            self.grid_update()
         else: 
         # update the grid for all resource unavailable to merge to uppercase
             for x in range(self.size):
                 for y in range(self.size):
                     self.grid[x][y] = self.grid[x][y].upper()
         
-        self.grid_display()
+            self.grid_display()
+        
+    def find_connected(self,r,c):
+        if (r,c) in self.visited or r < 0 or r >= self.size or c < 0 or c >= self.size or self.grid[r][c].lower() != self.grid[self.x_ind][self.y_ind] or self.grid[self.x_ind][self.y_ind] in not_check_list:
+            return None
+        self.visited.add((r,c))
+        self.connected.append((r,c))
+        # Explore all 4 possible directions: up, down, left, right
+        self.find_connected(r - 1, c) # up
+        self.find_connected(r + 1, c) # down
+        self.find_connected(r, c - 1) # left
+        self.find_connected(r, c + 1) # right
     
     def check_merge(self):
         # The point to check from self.grid[self.x_ind][self.y_ind]
-        self.dfs(self.x_ind, self.y_ind)
+        self.find_connected(self.x_ind, self.y_ind)
         if len(self.connected) >= 3:
             print(self.connected)
             return True
@@ -100,6 +100,18 @@ class grid():
             self.visited.clear()
             return False  
     
+    def resource_place(self, x, y, resource):
+        self.round += 1
+        # Raise index error?
+        
+        self.x_ind = x
+        self.y_ind = y
+        self.grid[x][y] = resource
+        self.empty_field.remove((x,y))
+        
+        self.grid_display()
+        self.grid_update()
+        
     def resource_merge(self):
         # Find all connected field(s): self.connected
         # Increase level for the initial point
@@ -109,14 +121,45 @@ class grid():
         self.connected.remove((self.x_ind,self.y_ind))
         for field in self.connected:
             self.grid[field[0]][field[1]] = '.'
+            self.empty_field.append((field[0],field[1]))
         
         # Reset self.connected
         self.connected = []
         self.visited.clear()
         
+    def resource_generate(self):
+        self.phase = "Generate"
+        res = random.randint(1,10)
+        ftp = random.choice(self.empty_field)
+        if res == 1: # generate obs
+            self.resource_place(ftp[0],ftp[1],'@')
+            self.grid_update()
+        elif res > 7:
+            rtp = 'a'
+            self.resource_place(ftp[0],ftp[1],rtp)
+            self.grid_update()
+        else:
+            pass
+        
     def resource_get_field(self, x, y):
         return self.grid[x][y]
-        
+    
+    def game_round(self):
+        while(len(self.empty_field)>0):
+            # Phase Generate
+            self.resource_generate()
+            # Phase Placement
+            self.phase = 'Placement'
+            self.grid_display()
+            res = 'a'
+            print(console_util.center_text(f"Where you want to place '{res}'"))
+            location = input(console_util.center_text("x and y: "))
+            x_ind = int(location[0])
+            y_ind = int(location[1])
+            
+            self.resource_place(x_ind, y_ind, res)
+        self.game_ends
+            
     def game_ends(self):
         # calculate score
         # ...
