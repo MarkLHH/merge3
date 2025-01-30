@@ -43,7 +43,7 @@ def test_merge_primal():
     test_grid.grid_update()
     
     test_grid.grid_update()
-    test.test_merge(test_grid)
+    test_merge(test_grid)
     
     '''
     should become
