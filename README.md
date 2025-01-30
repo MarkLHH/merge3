@@ -4,11 +4,15 @@ in local:
 2. `git remote add origin https://github.com/MarkLHH/merge3`
 3. `git pull origin main`
 
-# version 0.0.3
+# version 0.0.4
 
 # Change Log
-- Add grid and field display
-- Add console_util.py for console utitlies
+- Add random generate resources
+- Add random generate unresolvable obstacle
+- Add new class for field
+- Add game round
+- Optimized game round
+- Add game round information
 
 # Git cheat sheet
 - git pull origin main
