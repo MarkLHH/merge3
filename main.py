@@ -1,11 +1,11 @@
 import console_util
-import invasion_grid
+import grid
 import test
 
 def main():
     console_util.print_spacer()
     try:
-        test_grid = invasion_grid.grid(4)
+        test_grid = grid.grid(4)
         test_grid.grid_display()
     except Exception as e:
         print(e)
@@ -23,21 +23,21 @@ def main():
     | . | . | . | . |                                                                
     ----------------- 
     '''
-    test_grid.place_resource(1,0,'a')
-    test_grid.update_grid()
-    test_grid.place_resource(0,1,'a')
-    test_grid.update_grid()
-    test_grid.place_resource(1,2,'a')
-    test_grid.update_grid()
-    test_grid.place_resource(1,3,'a')
-    test_grid.update_grid()
-    test_grid.place_resource(3,3,'a')
-    test_grid.update_grid()
+    test_grid.resource_place(1,0,'a')
+    test_grid.grid_update()
+    test_grid.resource_place(0,1,'a')
+    test_grid.grid_update()
+    test_grid.resource_place(1,2,'a')
+    test_grid.grid_update()
+    test_grid.resource_place(1,3,'a')
+    test_grid.grid_update()
+    test_grid.resource_place(3,3,'a')
+    test_grid.grid_update()
     # Preparation complete
-    test_grid.place_resource(1,1,'a')
-    test_grid.update_grid()
+    test_grid.resource_place(1,1,'a')
+    test_grid.grid_update()
     
-    test_grid.update_grid()
+    test_grid.grid_update()
     test.test_merge(test_grid)
     
     '''
