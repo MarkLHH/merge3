@@ -14,6 +14,13 @@ def clear_screen():
         os.system('cls')
     else:  # macOS and Linux
         os.system('clear')
+
+def input_check(string_input):
+        num = '1234567890'
+        for i in string_input:
+            if i not in num:
+                return False
+        return True
         
 def print_spacer():
     print()

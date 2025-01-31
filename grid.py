@@ -4,22 +4,22 @@ import random
 level_a = 'abcde'
 level_A = {'A':'1', 'B':'2', 'C':'4', 'D':'6', 'E':'8' }
 
+empty_field = '.'
+
 not_check_list = '.@'
 # phase = 'Initiate', 'Placement', 'Update'
 class grid():
     def __init__(self, size = 4):
         self.size = int(size)
 
-        '''
         # Get the line capacity
         console_width = console_util.get_condole_width()
         max_grid_width = self.size * 4 + 1
-        # Error Handling 
+        # Error Handling  (Grid too big)
         if max_grid_width > console_width:
             raise Exception("Grid size too big, current console cannot handle!")
         elif self.size < 2:
-            raise Exception("Grid size too small, there\'s nothing you can do!")
-        '''
+            raise Exception("Grid size too small, there\'s nothing you can do!") 
         
         # create the invasion grid
         self.grid = []
@@ -109,16 +109,19 @@ class grid():
             return False  
     
     def resource_place(self, x, y, resource):
-        self.round += 1
-        # Raise index error?
+        if (x,y) in self.empty_field:      
+            self.round += 1   
+            self.x_ind = x
+            self.y_ind = y
+            self.grid[x][y] = resource
+            self.empty_field.remove((x,y))
+            self.grid_display()
+            self.grid_update()
+        else:
+            self.grid_display()
+            print(console_util.center_text("Field not empty!"))
+            return False
         
-        self.x_ind = x
-        self.y_ind = y
-        self.grid[x][y] = resource
-        self.empty_field.remove((x,y))
-        
-        self.grid_display()
-        self.grid_update()
         
     def resource_merge(self):
         # Find all connected field(s): self.connected
@@ -160,12 +163,18 @@ class grid():
             self.phase = 'Placement'
             self.grid_display()
             res = 'a'
-            print(console_util.center_text(f"Where you want to place '{res}'"))
-            location = input(console_util.center_text("x and y: "))
-            x_ind = int(location[0])
-            y_ind = int(location[1])
-            
-            self.resource_place(x_ind, y_ind, res)
+            while True:
+                print(console_util.center_text(f"Where you want to place '{res}'"))
+                while True:
+                    location = input(console_util.center_text("x and y: "))
+                    if (len(location) == 2 and
+                        console_util.input_check(location)):
+                        x_ind = int(location[0])
+                        y_ind = int(location[1])
+                        break
+                if self.resource_place(x_ind, y_ind, res):
+                    break
+                
         self.game_ends()
             
     def game_ends(self):
