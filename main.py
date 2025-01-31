@@ -3,7 +3,10 @@ import grid
 import test
 
 def main():
-    new_game = grid.grid(5)
-    new_game.game_round()
+    try:
+        new_game = grid.grid(4)
+        new_game.game_round()
+    except KeyboardInterrupt:
+        print(console_util.center_text(f"Game terminated!"))
     
 main()

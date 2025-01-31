@@ -2,7 +2,8 @@ import console_util
 import random
 
 level_a = 'abcde'
-level_1 = '12345'
+level_A = {'A':'1', 'B':'2', 'C':'4', 'D':'6', 'E':'8' }
+
 not_check_list = '.@'
 # phase = 'Initiate', 'Placement', 'Update'
 class grid():
@@ -78,7 +79,14 @@ class grid():
             self.grid_display()
         
     def find_connected(self,r,c):
-        if (r,c) in self.visited or r < 0 or r >= self.size or c < 0 or c >= self.size or self.grid[r][c].lower() != self.grid[self.x_ind][self.y_ind] or self.grid[self.x_ind][self.y_ind] in not_check_list:
+        if (
+            (r,c) in self.visited or 
+            r < 0 or 
+            r >= self.size or 
+            c < 0 or 
+            c >= self.size or 
+            self.grid[r][c].lower() != self.grid[self.x_ind][self.y_ind] or 
+            self.grid[self.x_ind][self.y_ind] in not_check_list):
             return None
         self.visited.add((r,c))
         self.connected.append((r,c))
@@ -158,11 +166,14 @@ class grid():
             y_ind = int(location[1])
             
             self.resource_place(x_ind, y_ind, res)
-        self.game_ends
+        self.game_ends()
             
     def game_ends(self):
-        # calculate score
-        # ...
+        score = 0
+        for x in range(self.size):
+            for y in range(self.size):
+                if self.grid[x][y] in level_A:
+                    score += int(level_A[f'{self.grid[x][y].upper()}'])
         
-        print('Game Ends!')
+        print(console_util.center_text(f'Game Ends! Final score: {score}'))
         
