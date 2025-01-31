@@ -3,10 +3,10 @@ import random
 
 level_a = 'abcde'
 level_A = {'A':'1', 'B':'2', 'C':'4', 'D':'6', 'E':'8' }
-
+obstacle = '@&'
 empty_field = '.'
 
-not_check_list = '.@'
+not_check_list = '.@&'
 # phase = 'Initiate', 'Placement', 'Update'
 class grid():
     def __init__(self, size = 4):
