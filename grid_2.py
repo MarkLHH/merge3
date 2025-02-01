@@ -29,7 +29,7 @@ class grid():
         self.connected = []
         self.visited = set()
 
-    def display(self):
+    def display(self, not_skip = True):
         console_util.clear_screen()
         print(console_util.center_text(f'Round: {self.round} | Phase: {self.phase}'))
         print(console_util.center_text(f'Phase: Generate > Placement'))
@@ -58,7 +58,9 @@ class grid():
             print(console_util.center_text(field_line_3))
             print(console_util.center_text(field_line_4))
             print(console_util.center_text(sep_line))
-        input()
+            
+        if  not_skip:
+            input()        
     
     def place(self, x, y, kind, level = 1):
         self.phase = "Placement"
@@ -71,6 +73,9 @@ class grid():
                     self.grid[x][y] = content.res(kind, x, y, level)
                 
                 self.empty_field.remove((x,y))
+                # record the last updated location
+                self.x_ind = x
+                self.y_ind = y
             else:
                 print(console_util.center_text("Field not empty!"))
                 input()
@@ -80,23 +85,65 @@ class grid():
         self.display()
         
     def update(self):
+        self.phase = 'Update'
         # merge res or obs
+        # if merged into O3 then dun need to run merge() again
+        updated = self.merge()
+        # resolve obs
         
-        pass
+        # Display the grid
+        self.display(updated)
     
-    def connected(self, r, c):
-        # find connected contents no matter it is obs or res
-        pass
+    def connect(self, r, c):
+        if self.grid[r][c] != None:
+            # find connected contents no matter it is obs or res
+            v_kind, kind = self.grid[r][c].kind, self.grid[self.x_ind][self.y_ind].kind
+            v_level, level = self.grid[r][c].level, self.grid[self.x_ind][self.y_ind].level
+            if(
+                (r,c) in self.visited or
+                v_kind != kind or # not same kind 
+                v_level != level or # not same level
+                r < 0 or
+                r >= self.size or
+                c < 0 or 
+                c >= self.size
+            ):
+                return None
+            self.visited.add((r,c))
+            self.connected.append((r,c))
+            # Explore all direction
+            self.connect(r - 1, c) # left
+            self.connect(r + 1, c) # right
+            self.connect(r, c + 1) # up
+            self.connect(r, c - 1) # down
     
     def merge(self):
-        
-        pass
+        updated = False
+        # find connected
+        if self.grid[self.x_ind][self.y_ind] != None:
+            self.connect(self.x_ind, self.y_ind)
+            print(len(self.connected))
+        if len(self.connected) >= 3:
+            self.grid[self.x_ind][self.y_ind].level_up(len(self.connected))
+            updated = True
+            # update empty_field and the grid when merged
+            self.connected.remove((self.x_ind,self.y_ind))
+            for field in self.connected:
+                self.grid[field[0]][field[1]] = None
+                self.empty_field.append((field[0],field[1]))
+            self.connected = []
+            self.visited.clear()    
+            self.merge() # there may be chain merge
+        # Reset grid information
+        self.connected = []
+        self.visited.clear()
+        return updated
     
     def generate(self):
         self.round += 1
         self.phase = "Generate"
         
-        #self.display()
+        self.display(True)
         
     def end(self):
         # points calculate
@@ -113,6 +160,8 @@ class grid():
             self.generate()
             self.update()
             ### Place res
+            self.phase = "Placement"
+            self.display(True)
             # Random the next res kind and level to place
             kind = '1'
             level = 1

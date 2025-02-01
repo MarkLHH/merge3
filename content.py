@@ -16,9 +16,11 @@ class res(content):
         self.name = 'R'
         self.score = properties.kind_score_meter(level, kind)
             
-    def level_up(self):
+    def level_up(self, connected):
         self.level += 1
-        self.score = properties.kind_score_meter(self.level, self.kind)
+        base_score = properties.kind_score_meter(self.level, self.kind)
+        self.score = (base_score + 1) if connected > 3 else base_score
+        
     
     def get_score(self):
     	print(self.score)
@@ -31,16 +33,19 @@ class obs(content):
         self.resolve = True
         self.block_cap = 4
         
+        # for resolve usage
         self.adjacent = [( pos_x - 1, pos_y),
                          ( pos_x + 1, pos_y),
                          ( pos_x, pos_y - 1),
                          ( pos_x, pos_y + 1)]
         
-    def level_up(self):
+    def level_up(self, connected):
         self.level += 1
         if self.level == 3:
             self.resolve = False
             self.score = 3
+        else: # level 2
+            self.score = properties.obs_2_sr_meter(connected)
             
     def update_block_cap(self):
         pass
