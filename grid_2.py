@@ -102,20 +102,20 @@ class grid():
             if(
                 (r,c) in self.visited or
                 v_kind != kind or # not same kind 
-                v_level != level or # not same level
-                r < 0 or
-                r >= self.size or
-                c < 0 or 
-                c >= self.size
+                v_level != level # not same level
             ):
                 return None
             self.visited.add((r,c))
             self.connected.append((r,c))
             # Explore all direction
-            self.connect(r - 1, c) # left
-            self.connect(r + 1, c) # right
-            self.connect(r, c + 1) # up
-            self.connect(r, c - 1) # down
+            if (r - 1) >= 0: 
+                self.connect(r - 1, c) # left
+            if (r + 1) < self.size:
+                self.connect(r + 1, c) # right
+            if (c + 1) < self.size:
+                self.connect(r, c + 1) # up
+            if (c - 1) >= 0:
+                self.connect(r, c - 1) # down
     
     def merge(self):
         updated = False
@@ -142,11 +142,26 @@ class grid():
     def generate(self):
         self.round += 1
         self.phase = "Generate"
+        gen_1 = random.randint(1,10)
+        ftp = random.choice(self.empty_field)
+        if gen_1 == 1:
+            self.place(ftp[0],ftp[1], '.')
+        elif gen_1 > 7:
+            self.place(ftp[0],ftp[1], '1')
         
         self.display(True)
         
     def end(self):
         # points calculate
+        total_score = 0
+        for x in range(self.size):
+            for y in range(self.size):
+                if self.grid[x][y] != None:
+                    if self.grid[x][y].name == 'O' and self.grid[x][y].level == 3:
+                        total_score -= self.grid[x][y].score
+                    elif self.grid[x][y].name == 'R':
+                        total_score += self.grid[x][y].score
+        print(console_util.center_text(f"Final Score: {total_score}"))
         
         # print game ends
         print()
@@ -172,7 +187,9 @@ class grid():
                     if ans[0] in '1234567890' and ans[1] in '1234567890':
                         x_input, y_input = int(ans[0]), int(ans[1])
                         break
+                    if ans == '!!':
+                        print(console_util.center_text("Game ended by player!"))
+                        return None
             # place
             self.place(x_input, y_input, kind, level)
             self.update()
-        self.end()
