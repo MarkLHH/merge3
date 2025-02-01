@@ -4,11 +4,12 @@ in local:
 2. `git remote add origin https://github.com/MarkLHH/merge3`
 3. `git pull origin main`
 
-# version 0.0.5
+# version 0.1.0
 
 # Change Log
-- Add Points calculation
-- Add some error handling
+- Update the grid display to have more field information
+- add resolvable obstacles
+- -> not yet revisit not resolvable obstacles
 
 # Git cheat sheet
 - git pull origin main

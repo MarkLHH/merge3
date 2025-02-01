@@ -62,7 +62,7 @@ class grid():
         if  not_skip:
             input()        
     
-    def place(self, x, y, kind, level = 1):
+    def place(self, x, y, kind = '1', level = 1, not_skip = True):
         self.phase = "Placement"
         # check if x y in bound and check if x y is not occupied
         if (0 <= x < self.size and 0 <= y < self.size):
@@ -82,7 +82,7 @@ class grid():
         else:
             raise IndexError("Coordinate out of bounds!")
         
-        self.display()
+        self.display(not_skip)
         
     def update(self):
         self.phase = 'Update'
@@ -121,7 +121,6 @@ class grid():
         # find connected
         if self.grid[self.x_ind][self.y_ind] != None:
             self.connect(self.x_ind, self.y_ind)
-            print(len(self.connected))
         if len(self.connected) >= 3:
             self.grid[self.x_ind][self.y_ind].level_up(len(self.connected))
             updated = True
@@ -139,19 +138,71 @@ class grid():
         self.visited.clear()
         return updated
     
+    def o_connect(self):
+        connected_o = []
+        if (self.x_ind - 1) >= 0 and self.grid[self.x_ind-1][self.y_ind] != None:
+            if self.grid[self.x_ind-1][self.y_ind].name == "O":
+                connected_o.append((self.x_ind-1,self.y_ind))
+        if (self.x_ind + 1) < self.size and self.grid[self.x_ind+1][self.y_ind] != None:
+            if self.grid[self.x_ind+1][self.y_ind].name == "O":
+                connected_o.append((self.x_ind+1,self.y_ind))
+        if (self.y_ind - 1) >= 0 and self.grid[self.x_ind][self.y_ind-1] != None:
+            if self.grid[self.x_ind][self.y_ind-1].name == "O":
+                connected_o.append((self.x_ind,self.y_ind-1))
+        if (self.y_ind + 1) < self.size and self.grid[self.x_ind][self.y_ind+1] != None:
+            if self.grid[self.x_ind][self.y_ind+1].name == "O":
+                connected_o.append((self.x_ind,self.y_ind+1))
+        
+        return connected_o
+    
+    def blocked(self):
+        for loc in self.connected:
+            if loc[0]-1 >= 0:
+                if self.grid[loc[0]-1][loc[1]] == None: # nothing blocked in left direction
+                    return False
+            if loc[0]+1 < self.size:
+                if self.grid[loc[0]+1][loc[1]] == None: # nothing blocked in right direction
+                    return False
+            if loc[1]-1 >= 0:
+                if self.grid[loc[0]][loc[1]-1] == None: # nothing blocked in up direction
+                    return False
+            if loc[1]+1 < self.size:
+                if self.grid[loc[0]][loc[1]+1] == None: # nothing blocked in down direction
+                    return False 
+        return True
+    
     def resolve(self):
         updated = False
-        # the placed one is R
-        # check all direction yaumo O
-        # yau O -> check connected O -> 
-        # connected == 2 -> for node in connected check blocked (field.name == R)
-        # connected == 1 -> grid xy check blocked (field.name == R)
-                
-        # the placed one is O
-        # yau O -> check connected O -> 
-        # connected == 2 -> for node in connected check blocked (field.name == R)
-        # connected == 1 -> grid xy check blocked (field.name == R)
-        
+        if self.grid[self.x_ind][self.y_ind] != None:
+            placed_one = self.grid[self.x_ind][self.y_ind].name
+            if placed_one == "R": # the placed one is R
+                connected_o = self.o_connect() # check all direction yaumo O
+                if len(connected_o) > 0: # yau O -> check connected O -> 
+                    for o in connected_o: # o is obs loc (x,y) not yet is the potential whole group
+                        self.x_ind, self.y_ind = o[0], o[1]
+                        self.connect(o[0], o[1]) # try to resolve one group by one group here
+                        block = self.blocked() # check blocked
+                        if block: # resolve the connected list and reset
+                            for field in self.connected:
+                                self.grid[field[0]][field[1]] = None
+                                self.empty_field.append((field[0],field[1]))
+                                updated = True
+                        # Reset self.connected and self.visited after finish one O
+                        self.connected = []
+                        self.visited.clear()
+                                
+            if placed_one == "O": # the placed one is O
+                self.connect(self.x_ind, self.y_ind)
+                block = self.blocked()
+                if block:
+                    for field in self.connected:
+                        self.grid[field[0]][field[1]] = None
+                        self.empty_field.append((field[0],field[1]))
+                        updated = True
+                # Reset self.connected and self.visited after finish one O
+                self.connected = []
+                self.visited.clear() 
+                    
         return updated
     
     def generate(self):
@@ -208,3 +259,5 @@ class grid():
             # place
             self.place(x_input, y_input, kind, level)
             self.update()
+            
+            
