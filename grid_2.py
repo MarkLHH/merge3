@@ -87,10 +87,9 @@ class grid():
     def update(self):
         self.phase = 'Update'
         # merge res or obs
-        # if merged into O3 then dun need to run merge() again
         updated = self.merge()
         # resolve obs
-        
+        updated = self.resolve()        
         # Display the grid
         self.display(updated)
     
@@ -133,10 +132,26 @@ class grid():
                 self.empty_field.append((field[0],field[1]))
             self.connected = []
             self.visited.clear()    
+            # if merged into O3 then dun need to run merge() again
             self.merge() # there may be chain merge
         # Reset grid information
         self.connected = []
         self.visited.clear()
+        return updated
+    
+    def resolve(self):
+        updated = False
+        # the placed one is R
+        # check all direction yaumo O
+        # yau O -> check connected O -> 
+        # connected == 2 -> for node in connected check blocked (field.name == R)
+        # connected == 1 -> grid xy check blocked (field.name == R)
+                
+        # the placed one is O
+        # yau O -> check connected O -> 
+        # connected == 2 -> for node in connected check blocked (field.name == R)
+        # connected == 1 -> grid xy check blocked (field.name == R)
+        
         return updated
     
     def generate(self):
