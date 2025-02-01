@@ -8,7 +8,7 @@ class content():
         self.pos_y = pos_y
         
     def res_get_location(self):
-        return (self.pos_x, self.pos_y)    
+        return (self.pos_x, self.pos_y)  
     
 class res(content):
     def __init__(self, kind, pos_x, pos_y, level = 1):
