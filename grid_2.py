@@ -59,7 +59,7 @@ class grid():
             print(console_util.center_text(field_line_4))
             print(console_util.center_text(sep_line))
             
-        if  not_skip:
+        if  not_skip: 
             input()        
     
     def place(self, x, y, kind = '1', level = 1, not_skip = True):
@@ -67,7 +67,7 @@ class grid():
         # check if x y in bound and check if x y is not occupied
         if (0 <= x < self.size and 0 <= y < self.size):
             if (x,y) in self.empty_field:
-                if kind == '.':
+                if kind == 'O':
                     self.grid[x][y] = content.obs(x, y, level)
                 elif properties.res_kind(kind):
                     self.grid[x][y] = content.res(kind, x, y, level)
@@ -119,6 +119,9 @@ class grid():
     def merge(self):
         updated = False
         # find connected
+        if self.grid[self.x_ind][self.y_ind].name == "O" and self.grid[self.x_ind][self.y_ind].level == 3:
+            return updated
+        
         if self.grid[self.x_ind][self.y_ind] != None:
             self.connect(self.x_ind, self.y_ind)
         if len(self.connected) >= 3:
@@ -211,7 +214,7 @@ class grid():
         gen_1 = random.randint(1,10)
         ftp = random.choice(self.empty_field)
         if gen_1 == 1:
-            self.place(ftp[0],ftp[1], '.')
+            self.place(ftp[0],ftp[1], 'O')
         elif gen_1 > 7:
             self.place(ftp[0],ftp[1], '1')
         
@@ -261,3 +264,23 @@ class grid():
             self.update()
             
             
+def test():
+    A = grid()
+    
+    A.place(0,0,'O')
+    A.place(0,1,'O')
+    A.place(0,2,'O')
+    A.update()
+    A.place(0,0,'O')
+    A.place(1,1,'O')
+    A.place(0,1,'O')
+    A.update()
+    A.place(2,0,'O')
+    A.place(1,0,'O')
+    A.place(0,0,'O')
+    A.update()
+    A.place(0,1,'O',3)
+    A.place(0,2,'O',3)
+    A.update()
+    
+test()

@@ -26,7 +26,7 @@ class res(content):
     	print(self.score)
         
 class obs(content):
-    def __init__(self, pos_x, pos_y, level, kind = '.'):
+    def __init__(self, pos_x, pos_y, level, kind = 'O'):
         super().__init__(pos_x, pos_y, level, kind)
         self.name = 'O'
         self.score = 2 # SR
